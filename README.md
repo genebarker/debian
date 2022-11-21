@@ -1,6 +1,6 @@
 # Base Debian 11 Server VM Setup
 
-Instructions:
+## Instructions
 
 1. Start with a headless Debian install:
     - use defaults
@@ -16,3 +16,11 @@ root@debian:~# wget https://github.com/genebarker/deb11base/raw/master/setup.sh 
     (or run the setup to retrieve the example config).
 5. Update `server.config` with desired settings.
 6. Run `setup.sh` script.
+
+## Inspiration
+
+- I want to spin-up my servers the way I like them faster.
+- I'm tired of making the same setup mistakes and having to
+  restart installs to get things just right.
+- I want the setups of my servers documented so they can be
+  repeated by others.
