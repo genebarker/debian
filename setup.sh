@@ -51,7 +51,7 @@ get_default_config_file()
 {
     echo ".. downloading default config file from repo"
     wget ${REPO_SOURCE_URL}/${CONFIG_FILENAME}
-    echo ".. download successful"
+    echo ".. config file download successful"
 }
 
 display_script_info
