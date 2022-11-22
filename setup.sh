@@ -12,14 +12,17 @@ SCRIPT_FILENAME="$(basename ${BASH_SOURCE})"
 BASE_DIR="$(dirname ${BASH_SOURCE})"
 
 HELP=$(cat << EOF
+NAME
+    ${SCRIPT_FILENAME} - a Debian server bootstrapper
+
 SYNOPSIS
     ${SCRIPT_FILENAME} [-h]
 
 DESCRIPTION
     Bootstrap a new Debian server using a configuration file.
 
-    Given a freshly installed headless Debian ${DEBIAN_VERSION} server, this
-    script configures it as per the settings found in the configuration
+    Given a freshly installed headless Debian ${DEBIAN_VERSION} server,
+    this script configures using the settings found in the configuration
     file: ${CONFIG_FILENAME}
 
 OPTIONS
@@ -43,8 +46,6 @@ has_default_config_file()
         echo ".. no default config file found (${CONFIG_FILENAME})"
         return 1
     fi
-
-    return $result
 }
 
 get_default_config_file()
