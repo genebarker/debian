@@ -13,8 +13,8 @@
 root@debian:~# wget https://github.com/genebarker/deb11base/raw/master/setup.sh && chmod 755 setup.sh
 ```
 4. Retrieve your desired `server.config` file to the same
-    (or run the setup to retrieve the example config).
-5. Update `server.config` with desired settings.
+    (or run the setup to retrieve the template config).
+5. Update `server.conf` with desired settings.
 6. Run `setup.sh` script.
 
 ## Inspiration
