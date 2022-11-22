@@ -22,7 +22,7 @@ DESCRIPTION
     Bootstrap a new Debian server using a configuration file.
 
     Given a freshly installed headless Debian ${DEBIAN_VERSION} server,
-    this script configures using the settings found in the configuration
+    this script configures it using the settings found in the configuration
     file: ${CONFIG_FILENAME}
 
 OPTIONS
@@ -30,10 +30,11 @@ OPTIONS
 EOF
 )
 
-display_script_info()
+display_script_header()
 {
     echo "${PROGRAM_NAME} for Debian ${DEBIAN_VERSION}"
     echo "Version ${PROGRAM_VERSION} - MIT License"
+    echo
 }
 
 has_default_config_file()
@@ -55,7 +56,7 @@ get_default_config_file()
     echo ".. config file download successful"
 }
 
-display_script_info
+display_script_header
 
 if ! has_default_config_file
 then
