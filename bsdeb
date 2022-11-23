@@ -59,6 +59,11 @@ run_main()
 
     echo ".. upgrading Debian image"
     apt-get update && apt-get -y dist-upgrade
+
+    echo ".. installing vim and setting as default"
+    apt-get -y install vim
+    update-alternatives --set editor /usr/bin/vim.basic
+
 }
 
 display_script_header()
