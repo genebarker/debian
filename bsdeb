@@ -89,7 +89,7 @@ show_error()
 
 display_script_header
 
-if [ ! has_default_config_file ]
+if ! has_default_config_file
 then
     get_default_config_file
 fi
