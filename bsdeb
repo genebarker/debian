@@ -18,7 +18,7 @@ NAME
     ${SCRIPT_FILENAME} - a Debian server bootstrapper
 
 SYNOPSIS
-    ${SCRIPT_FILENAME} [-bh]
+    ${SCRIPT_FILENAME} [-bh] [-f configfile]
 
 DESCRIPTION
     Bootstrap a new Debian server using a configuration file.
@@ -28,9 +28,9 @@ DESCRIPTION
     the configuration file.
 
 OPTIONS
-    -b          Bootstrap server
-    -f file     Configuration file, default: ${CONFIG_FILENAME}
-    -h          Display this help
+    -b              Bootstrap server
+    -f configfile   Configuration file, default: ${CONFIG_FILENAME}
+    -h              Display this help
 EOF
 )
 
@@ -68,7 +68,7 @@ override_config_filepath()
     then
         CONFIG_FILEPATH=$filepath
     else
-        echo "Config file ($filepath) not found."
+        show_error "Config file ($filepath) not found."
         exit 1
     fi
 }
@@ -82,13 +82,14 @@ show_help()
 show_error()
 {
     local message=$1
-    echo "$1"
+    echo
+    echo "$1 Displaying help."
     show_help
 }
 
 display_script_header
 
-if ! has_default_config_file
+if [ ! has_default_config_file ]
 then
     get_default_config_file
 fi
@@ -124,4 +125,11 @@ echo ".. config file set ($CONFIG_FILEPATH)"
 echo ".. displaying config"
 echo
 cat $CONFIG_FILEPATH
+
+if [ "$RUN_MODE" != "GO" ]
+then
+    echo
+    echo "Exiting since bootstrap option not selected."
+    exit 0
+fi
 
