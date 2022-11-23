@@ -134,18 +134,17 @@ override_config_filepath()
     fi
 }
 
-show_error()
-{
-    local message=$1
-    echo
-    echo "$1 Displaying help."
-    show_help
-}
-
 show_help()
 {
     echo
     echo "${HELP}"
+}
+
+show_error()
+{
+    local message=$1
+    echo
+    echo "ERROR: $1"
 }
 
 verify_config_file()
