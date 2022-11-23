@@ -36,6 +36,31 @@ OPTIONS
 EOF
 )
 
+run_main()
+{
+    display_script_header
+
+    if ! has_default_config_file
+    then
+        get_default_config_file
+    fi
+
+    parse_script_options $@
+
+    if [ $BOOTSTRAP != ON ]
+    then
+        echo
+        echo "Exiting since bootstrap option not used."
+        exit 0
+    fi
+
+    verify_config_file
+    verify_debian_version
+
+    echo ".. upgrading Debian image"
+    apt-get update && apt-get -y dist-upgrade
+}
+
 display_script_header()
 {
     echo "${PROGRAM_NAME} for Debian ${DEBIAN_VERSION}"
@@ -63,6 +88,40 @@ get_default_config_file()
     echo ".. config file download successful"
 }
 
+parse_script_options()
+{
+    echo ".. parsing script options"
+    while getopts ':bf:yh' opt
+    do
+        case "$opt" in
+            b)
+                BOOTSTRAP=ON
+                ;;
+            f)
+                override_config_filepath $OPTARG
+                ;;
+            y)
+                AUTO_YES=ON
+                ;;
+            h)
+                show_help
+                exit 0
+                ;;
+            :)
+                show_error "Option requires an argument."
+                exit 1
+                ;;
+            ?)
+                show_error "Invalid command option."
+                exit 1
+                ;;
+        esac
+    done
+
+    # remove getopts parms from parameter list
+    shift $((OPTIND-1))
+}
+
 override_config_filepath()
 {
     local filepath=$1
@@ -75,18 +134,28 @@ override_config_filepath()
     fi
 }
 
-show_help()
-{
-    echo
-    echo "${HELP}"
-}
-
 show_error()
 {
     local message=$1
     echo
     echo "$1 Displaying help."
     show_help
+}
+
+show_help()
+{
+    echo
+    echo "${HELP}"
+}
+
+verify_config_file()
+{
+    echo ".. config file set ($CONFIG_FILEPATH)"
+    echo ".. displaying config"
+    echo
+    cat $CONFIG_FILEPATH
+    question="Is this the correct config to apply (y/n)?"
+    ask_continue_question "$question"
 }
 
 ask_continue_question()
@@ -111,78 +180,27 @@ ask_continue_question()
     fi
 }
 
-display_script_header
-
-if ! has_default_config_file
-then
-    get_default_config_file
-fi
-
-echo ".. parsing script arguments"
-while getopts ':bf:yh' opt; do
-    case "$opt" in
-        b)
-            BOOTSTRAP=ON
-            ;;
-        f)
-            override_config_filepath $OPTARG
-            ;;
-        y)
-            AUTO_YES=ON
-            ;;
-        h)
-            show_help
-            exit 0
-            ;;
-        :)
-            show_error "Option requires an argument."
-            exit 1
-            ;;
-        ?)
-            show_error "Invalid command option."
-            exit 1
-            ;;
-    esac
-done
-
-# remove getopts parms from parameter list
-shift $((OPTIND-1))
-
-if [ $BOOTSTRAP != ON ]
-then
-    echo
-    echo "Exiting since bootstrap option not used."
-    exit 0
-fi
-
-# verify config file
-echo ".. config file set ($CONFIG_FILEPATH)"
-echo ".. displaying config"
-echo
-cat $CONFIG_FILEPATH
-question="Is this the correct config to apply (y/n)?"
-ask_continue_question "$question"
-
-if [ -f /etc/debian_version ]
-then
-    version=$(cat /etc/debian_version)
-    echo ".. identified version of Debian image ($version)"
-else
-    version="UNKNOWN"
-fi
-if [ "$version" != "$DEBIAN_VERSION" ]
-then
-    question=$(cat << EOF
+verify_debian_version()
+{
+    if [ -f /etc/debian_version ]
+    then
+        version=$(cat /etc/debian_version)
+        echo ".. identified version of Debian image ($version)"
+    else
+        version="UNKNOWN"
+    fi
+    if [ "$version" != "$DEBIAN_VERSION" ]
+    then
+        question=$(cat << EOF
 WARNING: The version of this Debian image ($version) does NOT match
 the script target ($DEBIAN_VERSION).
 
 Do you still want to bootstrap this image (y/n)?
 EOF
-    )
-    ask_continue_question "$question"
-    echo
-fi
+        )
+        ask_continue_question "$question"
+        echo
+    fi
+}
 
-echo ".. upgrading Debian image"
-apt-get update && apt-get -y dist-upgrade
-
+run_main $@
