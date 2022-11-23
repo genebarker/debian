@@ -19,7 +19,7 @@ NAME
     ${SCRIPT_FILENAME} - a Debian server bootstrapper
 
 SYNOPSIS
-    ${SCRIPT_FILENAME} [-byh] [-f configfile]
+    ${SCRIPT_FILENAME} [-bhy] [-f configfile]
 
 DESCRIPTION
     Bootstrap a new Debian server using a configuration file.
@@ -31,8 +31,8 @@ DESCRIPTION
 OPTIONS
     -b              Bootstrap server
     -f configfile   Configuration file, default: ${CONFIG_FILENAME}
-    -y              Answer yes to confirmation messages
     -h              Display this help
+    -y              Answer yes to confirmation messages
 EOF
 )
 
