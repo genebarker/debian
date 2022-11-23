@@ -10,7 +10,7 @@ Instructions:
 2. Backup the image from Step 1 to save time on future installs.
 3. Login as root and retrieve the script from repo:
 ```console
-root@debian:~# wget https://github.com/genebarker/deb11base/raw/master/bsdeb && chmod 755 bsdeb
+root@debian:~# wget -N https://github.com/genebarker/deb11base/raw/master/bsdeb && chmod 755 bsdeb
 ```
 4. Retrieve your desired `server.conf` file to the same
     (or run the script to retrieve example config).
