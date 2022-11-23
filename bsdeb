@@ -10,23 +10,27 @@ CONFIG_FILENAME="server.conf"
 REPO_SOURCE_URL="https://github.com/genebarker/deb11base/raw/master"
 SCRIPT_FILENAME="$(basename ${BASH_SOURCE})"
 BASE_DIR="$(dirname ${BASH_SOURCE})"
+RUN_MODE="Show info only"
+CONFIG_FILEPATH="${BASE_DIR}/${CONFIG_FILENAME}"
 
 HELP=$(cat << EOF
 NAME
     ${SCRIPT_FILENAME} - a Debian server bootstrapper
 
 SYNOPSIS
-    ${SCRIPT_FILENAME} [-h]
+    ${SCRIPT_FILENAME} [-bh]
 
 DESCRIPTION
     Bootstrap a new Debian server using a configuration file.
 
-    Given a freshly installed headless Debian ${DEBIAN_VERSION} server,
-    this script configures it using the settings found in the configuration
-    file: ${CONFIG_FILENAME}
+    Given a freshly installed headless Debian ${DEBIAN_VERSION}
+    server, this script configures it using the settings found in
+    the configuration file.
 
 OPTIONS
-    -h  Display this help
+    -b          Bootstrap server
+    -f file     Configuration file, default: ${CONFIG_FILENAME}
+    -h          Display this help
 EOF
 )
 
@@ -39,7 +43,8 @@ display_script_header()
 
 has_default_config_file()
 {
-    if [ -f ${BASE_DIR}/${CONFIG_FILENAME} ]
+    echo ".. verifying default config file present"
+    if [ -f ${CONFIG_FILEPATH} ]
     then
         echo ".. found default config file (${CONFIG_FILENAME})"
         return 0
@@ -56,6 +61,31 @@ get_default_config_file()
     echo ".. config file download successful"
 }
 
+override_config_filepath()
+{
+    local filepath=$1
+    if [ -f $1 ]
+    then
+        CONFIG_FILEPATH=$filepath
+    else
+        echo "Config file ($filepath) not found."
+        exit 1
+    fi
+}
+
+show_help()
+{
+    echo
+    echo "${HELP}"
+}
+
+show_error()
+{
+    local message=$1
+    echo "$1"
+    show_help
+}
+
 display_script_header
 
 if ! has_default_config_file
@@ -63,6 +93,35 @@ then
     get_default_config_file
 fi
 
+echo ".. parsing script arguments"
+while getopts ':bf:h' opt; do
+    case "$opt" in
+        b)
+            RUN_MODE="GO"
+            ;;
+        f)
+            override_config_filepath $OPTARG
+            ;;
+        h)
+            show_help
+            exit 0
+            ;;
+        :)
+            show_error "Option requires an argument."
+            exit 1
+            ;;
+        ?)
+            show_error "Invalid command option."
+            exit 1
+            ;;
+    esac
+done
+
+# remove getopts parms from parameter list
+shift $((OPTIND-1))
+
+echo ".. config file set ($CONFIG_FILEPATH)"
+echo ".. displaying config"
 echo
-echo "${HELP}"
+cat $CONFIG_FILEPATH
 
