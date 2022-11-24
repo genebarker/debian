@@ -56,22 +56,9 @@ run_main()
 
     verify_and_load_config_file
     verify_debian_version
-
-    echo ".. upgrading Debian image"
-    apt-get update && apt-get -y dist-upgrade
-
-    echo ".. installing vim and setting as default"
-    apt-get -y install vim
-    update-alternatives --set editor /usr/bin/vim.basic
-
-    if [ ! -z "$SSH_PORT" ]
-    then
-        echo ".. configuring ssh"
-        cp -n /etc/ssh/sshd_config /etc/ssh/sshd_config.orig
-        sed -i "s/#Port 22/Port $SSH_PORT/" /etc/ssh/sshd_config
-        service sshd restart
-        service sshd status
-    fi
+    upgrade_debian_image_to_latest
+    install_vim_and_set_as_default
+    configure_ssh_server
 }
 
 display_script_header()
@@ -214,6 +201,31 @@ EOF
         )
         ask_continue_question "$question"
         echo
+    fi
+}
+
+upgrade_debian_image_to_latest()
+{
+    echo ".. upgrading Debian image to latest available"
+    apt-get update && apt-get -y dist-upgrade
+}
+
+install_vim_and_set_as_default()
+{
+    echo ".. installing vim and setting as default editor"
+    apt-get -y install vim
+    update-alternatives --set editor /usr/bin/vim.basic
+}
+
+configure_ssh_server()
+{
+    if [ ! -z "$SSH_PORT" ]
+    then
+        echo ".. configuring ssh"
+        cp -n /etc/ssh/sshd_config /etc/ssh/sshd_config.orig
+        sed -i "s/#Port 22/Port $SSH_PORT/" /etc/ssh/sshd_config
+        service sshd restart
+        service sshd status
     fi
 }
 
