@@ -54,7 +54,7 @@ run_main()
         exit 0
     fi
 
-    verify_config_file
+    verify_and_load_config_file
     verify_debian_version
 
     echo ".. upgrading Debian image"
@@ -64,6 +64,13 @@ run_main()
     apt-get -y install vim
     update-alternatives --set editor /usr/bin/vim.basic
 
+    if [ ! -z "$SSH_PORT" ]
+    then
+        echo ".. configuring ssh"
+        cp -n /etc/ssh/sshd_config /etc/ssh/sshd_config.orig
+        sed -i "s/#Port 22/Port $SSH_PORT/" /etc/ssh/sshd_config
+        service sshd restart
+    fi
 }
 
 display_script_header()
@@ -152,7 +159,7 @@ show_error()
     echo "ERROR: $1"
 }
 
-verify_config_file()
+verify_and_load_config_file()
 {
     echo ".. config file set ($CONFIG_FILEPATH)"
     echo ".. displaying config"
@@ -160,6 +167,8 @@ verify_config_file()
     cat $CONFIG_FILEPATH
     question="Is this the correct config to apply (y/n)?"
     ask_continue_question "$question"
+    source $CONFIG_FILEPATH
+    echo ".. config file loaded"
 }
 
 ask_continue_question()
