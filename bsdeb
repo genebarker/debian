@@ -47,7 +47,7 @@ run_main()
 
     parse_script_options $@
 
-    if [ $BOOTSTRAP != ON ]
+    if [ $BOOTSTRAP = OFF ]
     then
         echo
         echo "Exiting since bootstrap option not used."
