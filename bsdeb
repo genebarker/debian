@@ -70,6 +70,7 @@ run_main()
         cp -n /etc/ssh/sshd_config /etc/ssh/sshd_config.orig
         sed -i "s/#Port 22/Port $SSH_PORT/" /etc/ssh/sshd_config
         service sshd restart
+        service sshd status
     fi
 }
 
