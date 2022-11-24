@@ -49,6 +49,7 @@ run_main()
     upgrade_debian_image_to_latest
     install_vim_and_set_as_default
     install_windows_integration_utils
+    install_core_dev_utils
     configure_ssh_server
 }
 
@@ -230,6 +231,12 @@ install_windows_integration_utils()
 {
     echo ".. installing windows integration utilitities"
     apt-get -y install zip unzip dos2unix
+}
+
+install_core_dev_utils()
+{
+    echo ".. installing core development utilities"
+    apt-get -y install git fzf
 }
 
 configure_ssh_server()
