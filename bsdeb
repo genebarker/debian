@@ -39,23 +39,13 @@ EOF
 run_main()
 {
     display_script_header
-
-    if ! has_default_config_file
-    then
-        get_default_config_file
-    fi
-
+    get_default_config
     parse_script_options $@
 
-    if [ $BOOTSTRAP = OFF ]
-    then
-        echo
-        echo "Exiting since bootstrap option not used."
-        exit 0
-    fi
-
+    verify_bootstrap_selected
     verify_and_load_config_file
     verify_debian_version
+
     upgrade_debian_image_to_latest
     install_vim_and_set_as_default
     configure_ssh_server
@@ -66,6 +56,14 @@ display_script_header()
     echo "${PROGRAM_NAME} for Debian ${DEBIAN_VERSION}"
     echo "Version ${PROGRAM_VERSION} - MIT License"
     echo
+}
+
+get_default_config()
+{
+    if ! has_default_config_file
+    then
+        download_default_config_file
+    fi
 }
 
 has_default_config_file()
@@ -81,7 +79,7 @@ has_default_config_file()
     fi
 }
 
-get_default_config_file()
+download_default_config_file()
 {
     echo ".. downloading default config file from repo"
     wget ${REPO_SOURCE_URL}/${CONFIG_FILENAME}
@@ -98,7 +96,7 @@ parse_script_options()
                 BOOTSTRAP=ON
                 ;;
             f)
-                override_config_filepath $OPTARG
+                override_config_filepath "$OPTARG"
                 ;;
             y)
                 AUTO_YES=ON
@@ -145,6 +143,16 @@ show_error()
     local message=$1
     echo
     echo "ERROR: $1"
+}
+
+verify_bootstrap_selected()
+{
+    if [ $BOOTSTRAP = OFF ]
+    then
+        echo
+        echo "Exiting since bootstrap option not used."
+        exit 0
+    fi
 }
 
 verify_and_load_config_file()
