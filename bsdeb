@@ -48,6 +48,7 @@ run_main()
 
     upgrade_debian_image_to_latest
     install_vim_and_set_as_default
+    install_windows_integration_utils
     configure_ssh_server
 }
 
@@ -223,6 +224,12 @@ install_vim_and_set_as_default()
     echo ".. installing vim and setting as default editor"
     apt-get -y install vim
     update-alternatives --set editor /usr/bin/vim.basic
+}
+
+install_windows_integration_utils()
+{
+    echo ".. installing windows integration utilitities"
+    apt-get -y install zip unzip dos2unix
 }
 
 configure_ssh_server()
