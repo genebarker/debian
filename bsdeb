@@ -241,14 +241,16 @@ install_core_dev_utils()
 
 configure_ssh_server()
 {
-    if [ ! -z "$SSH_PORT" ]
+    if [ -z "$SSH_PORT" ]
     then
-        echo ".. configuring ssh"
-        cp -n /etc/ssh/sshd_config /etc/ssh/sshd_config.orig
-        sed -i "s/#Port 22/Port $SSH_PORT/" /etc/ssh/sshd_config
-        service sshd restart
-        service sshd status
+        return # nothing to configure
     fi
+
+    echo ".. configuring ssh"
+    cp -n /etc/ssh/sshd_config /etc/ssh/sshd_config.orig
+    sed -i "s/#Port 22/Port $SSH_PORT/" /etc/ssh/sshd_config
+    service sshd restart
+    service sshd status
 }
 
 run_main $@
