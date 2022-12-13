@@ -51,6 +51,8 @@ run_main()
     install_windows_integration_utils
     install_core_dev_utils
     configure_ssh_server
+
+    load_and_install_dotfiles
 }
 
 display_script_header()
@@ -251,6 +253,19 @@ configure_ssh_server()
     sed -i "s/#Port 22/Port $SSH_PORT/" /etc/ssh/sshd_config
     service sshd restart
     service sshd status
+}
+
+load_and_install_dotfiles()
+{
+    if [ -z "$DOTFILES_REPO_URL" ]
+    then
+        return # no dotfile repo defined
+    fi
+
+    echo ".. cloning dotfiles repo"
+    cd && git clone $DOTFILES_REPO_URL
+    echo ".. installing dotfiles"
+    ./bsdot -b
 }
 
 run_main $@
