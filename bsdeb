@@ -265,7 +265,7 @@ load_and_install_dotfiles()
     echo ".. cloning dotfiles repo"
     cd && git clone $DOTFILES_REPO_URL
     echo ".. installing dotfiles"
-    ./bsdot -b
+    ./dotfiles/bsdots -b
 }
 
 run_main $@
