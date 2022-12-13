@@ -54,6 +54,8 @@ run_main()
 
     load_and_install_dotfiles
     load_and_install_dotfiles_for_non_admin_user
+
+    source .bashrc
 }
 
 display_script_header()
