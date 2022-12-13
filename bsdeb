@@ -281,7 +281,7 @@ load_and_install_dotfiles_for_non_admin_user()
     echo ".. installing dotfiles for non admin user ($NON_ADMIN_USERNAME)"
     cp -r dotfiles /home/$NON_ADMIN_USERNAME
     chown -R $NON_ADMIN_USERNAME:$NON_ADMIN_USERNAME /home/$NON_ADMIN_USERNAME/dotfiles
-    su $NON_ADMIN_USERNAME -c "cd && ./bsdots -b"
+    su $NON_ADMIN_USERNAME -c "cd && ./dotfiles/bsdots -b"
 }
 
 run_main $@
