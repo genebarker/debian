@@ -227,6 +227,8 @@ install_vim_and_set_as_default()
     echo ".. installing vim and setting as default editor"
     apt-get -y install vim
     update-alternatives --set editor /usr/bin/vim.basic
+    echo ".. installing curl (needed by vim-plug)"
+    apt-get -y install curl
 }
 
 install_windows_integration_utils()
@@ -238,7 +240,7 @@ install_windows_integration_utils()
 install_core_dev_utils()
 {
     echo ".. installing core development utilities"
-    apt-get -y install git fzf
+    apt-get -y install git
 }
 
 configure_ssh_server()
