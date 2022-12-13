@@ -53,6 +53,7 @@ run_main()
     configure_ssh_server
 
     load_and_install_dotfiles
+    load_and_install_dotfiles_for_non_admin_user
 }
 
 display_script_header()
@@ -268,6 +269,19 @@ load_and_install_dotfiles()
     cd && git clone $DOTFILES_REPO_URL
     echo ".. installing dotfiles"
     ./dotfiles/bsdots -b
+}
+
+load_and_install_dotfiles_for_non_admin_user()
+{
+    if [ -z "$NON_ADMIN_USERNAME" ]
+    then
+        return # no non admin user
+    fi
+
+    echo ".. installing dotfiles for non admin user ($NON_ADMIN_USERNAME)"
+    cp -r dotfiles /home/$NON_ADMIN_USERNAME
+    chown -R $NON_ADMIN_USERNAME:$NON_ADMIN_USERNAME /home/$NON_ADMIN_USERNAME/dotfiles
+    su $NON_ADMIN_USERNAME -c "cd && ./bsdots -b"
 }
 
 run_main $@
