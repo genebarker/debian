@@ -53,7 +53,7 @@ run_main()
     configure_ssh_server
 
     load_and_install_dotfiles
-    load_and_install_dotfiles_for_non_admin_user
+    gen_ssh_keys_and_set_auth_user
 }
 
 display_script_header()
@@ -269,19 +269,36 @@ load_and_install_dotfiles()
     cd && git clone $DOTFILES_REPO_URL
     echo ".. installing dotfiles"
     ./dotfiles/bsdots -b
+
+    if [ -z "$NON_ADMIN_USERNAME" ]
+    then
+        return # no non admin user
+    fi
+
+    echo ".. copying dotfiles repo for non admin user ($NON_ADMIN_USERNAME)"
+    cp -r dotfiles /home/$NON_ADMIN_USERNAME
+    chown -R $NON_ADMIN_USERNAME:$NON_ADMIN_USERNAME /home/$NON_ADMIN_USERNAME/dotfiles
+    echo ".. installing non admin user dotfiles"
+    su $NON_ADMIN_USERNAME -c "/home/$NON_ADMIN_USERNAME/dotfiles/bsdots -b"
 }
 
-load_and_install_dotfiles_for_non_admin_user()
+gen_ssh_keys_and_set_auth_user()
 {
     if [ -z "$NON_ADMIN_USERNAME" ]
     then
         return # no non admin user
     fi
 
-    echo ".. installing dotfiles for non admin user ($NON_ADMIN_USERNAME)"
-    cp -r dotfiles /home/$NON_ADMIN_USERNAME
-    chown -R $NON_ADMIN_USERNAME:$NON_ADMIN_USERNAME /home/$NON_ADMIN_USERNAME/dotfiles
-    su $NON_ADMIN_USERNAME -c "/home/$NON_ADMIN_USERNAME/dotfiles/bsdots -b"
+    echo ".. generating SSH keys for non admin user ($NON_ADMIN_USERNAME)"
+    su $NON_ADMIN_USERNAME -c 'ssh-keygen -q -t rsa -N ""'
+
+    if [ -z "$NON_ADMIN_AUTH_KEY" ]
+    then
+        return # no authorized key
+    fi
+
+    echo ".. adding authorized key"
+    su $NON_ADMIN_USERNAME -c "echo $NON_ADMIN_AUTH_KEY > /home/$NON_ADMIN_USERNAME/.ssh/authorized_keys"
 }
 
 run_main $@
