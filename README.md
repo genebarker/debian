@@ -1,6 +1,6 @@
-Base Debian 11 Server VM Setup
+# Base Debian 11 Server VM Setup
 
-Instructions:
+## Instructions
 
 1. Start with a headless Debian install:
     - use defaults
@@ -17,7 +17,7 @@ root@debian:~# wget -N https://github.com/genebarker/deb11base/raw/master/bsdeb 
 5. Update `server.conf` with desired settings.
 6. Run `bsdeb` script.
 
-Design goals:
+## Design goals
 
 - Spin-up servers fast;
 - Configure them the way I like them;
