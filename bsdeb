@@ -248,7 +248,7 @@ install_windows_integration_utils()
 install_core_dev_utils()
 {
     echo ".. installing core development utilities"
-    apt-get -y install git bat
+    apt-get -y install git ack bat
 }
 
 configure_ssh_server()
