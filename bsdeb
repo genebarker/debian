@@ -319,6 +319,7 @@ gen_ssh_keys_and_set_auth_user()
 
     echo ".. generating SSH keys for non admin user ($NON_ADMIN_USERNAME)"
     KEY_HOME=/home/$NON_ADMIN_USERNAME/.ssh
+    rm -f $KEY_HOME/id_rsa
     su $NON_ADMIN_USERNAME -c "ssh-keygen -q -t rsa -N '' -f $KEY_HOME/id_rsa"
 
     if [ -z "$NON_ADMIN_AUTH_KEY" ]
