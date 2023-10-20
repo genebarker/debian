@@ -261,7 +261,14 @@ configure_ssh_server()
     fi
 
     echo ".. configuring ssh"
-    cp -n /etc/ssh/sshd_config /etc/ssh/sshd_config.orig
+    if [ -f /etc/ssh/sshd_config.orig ]
+    then
+        # recover original
+        cp /etc/ssh/sshd_config.orig /etc/ssh/ssh_config
+    else
+        # save original
+        cp -n /etc/ssh/sshd_config /etc/ssh/sshd_config.orig
+    fi
     sed -i "s/#Port 22/Port $SSH_PORT/" /etc/ssh/sshd_config
     service sshd restart
     service sshd status
@@ -275,8 +282,16 @@ load_and_install_dotfiles()
     fi
 
     echo ".. cloning dotfiles repo"
-    cd && git clone $DOTFILES_REPO_URL
+    if [ -d dotfiles ]
+    then
+        cd ~/dotfiles
+        git pull origin
+    else
+        cd
+        git clone $DOTFILES_REPO_URL
+    fi
     echo ".. installing dotfiles"
+    cd
     ./dotfiles/bsdots -b
 
     if [ -z "$NON_ADMIN_USERNAME" ]
@@ -285,6 +300,10 @@ load_and_install_dotfiles()
     fi
 
     echo ".. copying dotfiles repo for non admin user ($NON_ADMIN_USERNAME)"
+    if [ -d /home/$NON_ADMIN_USERNAME ]
+    then
+        rm -rf /home/$NON_ADMIN_USERNAME/dotfiles
+    fi
     cp -r dotfiles /home/$NON_ADMIN_USERNAME
     chown -R $NON_ADMIN_USERNAME:$NON_ADMIN_USERNAME /home/$NON_ADMIN_USERNAME/dotfiles
     echo ".. installing non admin user dotfiles"
