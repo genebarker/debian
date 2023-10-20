@@ -56,7 +56,7 @@ run_main()
     load_and_install_dotfiles
     gen_ssh_keys_and_set_auth_user
 
-    configure_box
+    run_config_file_script
 }
 
 display_script_header()
@@ -309,6 +309,12 @@ gen_ssh_keys_and_set_auth_user()
 
     echo ".. adding authorized key"
     su $NON_ADMIN_USERNAME -c "echo $NON_ADMIN_AUTH_KEY > $KEY_HOME/authorized_keys"
+}
+
+run_config_file_script()
+{
+    echo ".. running config file script"
+    configure_box
 }
 
 run_main $@
