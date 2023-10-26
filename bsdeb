@@ -136,7 +136,7 @@ verify_and_load_config_file()
 {
     if [ ! -f "$CONFIG_FILEPATH" ]
     then
-        get_config_file_from_repo_and_exit
+        get_config_file_from_repo_and_exit $CONFIG_FILENAME
     fi
     echo ".. config file set ($CONFIG_FILEPATH)"
     echo ".. displaying config"
@@ -150,8 +150,9 @@ verify_and_load_config_file()
 
 get_config_file_from_repo_and_exit()
 {
-    download_config_file
-    echo -n "Update config file ${CONFIG_FILEPATH} with your settings, "
+    local filename=$1
+    download_config_file $filename
+    echo -n "Update config file ${filename} with your settings, "
     echo "then rerun this script."
     exit 1
 }
@@ -159,7 +160,7 @@ get_config_file_from_repo_and_exit()
 download_config_file()
 {
     echo ".. downloading config file from repo"
-    wget ${REPO_SOURCE_URL}/${CONFIG_FILENAME}
+    wget ${REPO_SOURCE_URL}/$1
     echo ".. config file download successful"
 }
 
