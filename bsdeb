@@ -151,6 +151,7 @@ verify_and_load_config_file()
 
 get_default_config()
 {
+    CONFIG_FILEPATH="${BASE_DIR}/${CONFIG_FILENAME}"
     if ! has_default_config_file
     then
         download_default_config_file
@@ -177,7 +178,6 @@ download_default_config_file()
 {
     echo ".. downloading default config file from repo"
     wget ${REPO_SOURCE_URL}/${CONFIG_FILENAME}
-    CONFIG_FILEPATH="${BASE_DIR}/${CONFIG_FILENAME}"
     echo ".. config file download successful"
 }
 
