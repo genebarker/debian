@@ -9,11 +9,11 @@
     - don't select a desktop
 2. Backup the image from Step 1 to save time on future installs.
 3. Login as root and retrieve the script from repo:
-```console
+```bash
 root@debian:~# wget -N https://github.com/genebarker/debian/raw/master/bsdeb && chmod 755 bsdeb
 ```
 4. Retrieve your desired `server.conf` file to the same
-    (or run the script to retrieve example config).
+   (or run the script to retrieve a bare-bones example config).
 5. Update `server.conf` with desired settings.
 6. Run `bsdeb` script.
 
