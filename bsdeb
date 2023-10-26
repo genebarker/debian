@@ -11,7 +11,6 @@ REPO_SOURCE_URL="https://github.com/genebarker/debian/raw/master"
 SCRIPT_FILENAME="$(basename ${BASH_SOURCE})"
 BASE_DIR="$(dirname ${BASH_SOURCE})"
 BOOTSTRAP=OFF
-CONFIG_FILEPATH="${BASE_DIR}/${CONFIG_FILENAME}"
 AUTO_YES=OFF
 
 HELP=$(cat << EOF
@@ -39,7 +38,6 @@ EOF
 run_main()
 {
     display_script_header
-    get_default_config
     parse_script_options $@
 
     verify_bootstrap_selected
@@ -64,37 +62,6 @@ display_script_header()
     echo "${PROGRAM_NAME} for Debian ${DEBIAN_VERSION}"
     echo "Version ${PROGRAM_VERSION} - MIT License"
     echo
-}
-
-get_default_config()
-{
-    if ! has_default_config_file
-    then
-        download_default_config_file
-        echo "Update config file ${CONFIG_FILEPATH} with your settings,"
-        echo "then rerun this script."
-        exit 1
-    fi
-}
-
-has_default_config_file()
-{
-    echo ".. verifying default config file present"
-    if [ -f ${CONFIG_FILEPATH} ]
-    then
-        echo ".. found default config file (${CONFIG_FILENAME})"
-        return 0
-    else
-        echo ".. no default config file found (${CONFIG_FILENAME})"
-        return 1
-    fi
-}
-
-download_default_config_file()
-{
-    echo ".. downloading default config file from repo"
-    wget ${REPO_SOURCE_URL}/${CONFIG_FILENAME}
-    echo ".. config file download successful"
 }
 
 parse_script_options()
@@ -168,6 +135,10 @@ verify_bootstrap_selected()
 
 verify_and_load_config_file()
 {
+    if [ -z "$CONFIG_FILEPATH" ]
+    then
+        get_default_config
+    fi
     echo ".. config file set ($CONFIG_FILEPATH)"
     echo ".. displaying config"
     echo
@@ -176,6 +147,38 @@ verify_and_load_config_file()
     ask_continue_question "$question"
     source $CONFIG_FILEPATH
     echo ".. config file loaded"
+}
+
+get_default_config()
+{
+    if ! has_default_config_file
+    then
+        download_default_config_file
+        echo "Update config file ${CONFIG_FILEPATH} with your settings,"
+        echo "then rerun this script."
+        exit 1
+    fi
+}
+
+has_default_config_file()
+{
+    echo ".. verifying default config file present"
+    if [ -f ${CONFIG_FILEPATH} ]
+    then
+        echo ".. found default config file (${CONFIG_FILENAME})"
+        return 0
+    else
+        echo ".. no default config file found (${CONFIG_FILENAME})"
+        return 1
+    fi
+}
+
+download_default_config_file()
+{
+    echo ".. downloading default config file from repo"
+    wget ${REPO_SOURCE_URL}/${CONFIG_FILENAME}
+    CONFIG_FILEPATH="${BASE_DIR}/${CONFIG_FILENAME}"
+    echo ".. config file download successful"
 }
 
 ask_continue_question()
