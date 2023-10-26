@@ -71,6 +71,9 @@ get_default_config()
     if ! has_default_config_file
     then
         download_default_config_file
+        echo "Update config file ${CONFIG_FILEPATH} with your settings,"
+        echo "then rerun this script."
+        exit 1
     fi
 }
 
