@@ -134,7 +134,7 @@ verify_bootstrap_selected()
 
 verify_and_load_config_file()
 {
-    if [ -f "$CONFIG_FILEPATH" ]
+    if [ ! -f "$CONFIG_FILEPATH" ]
     then
         get_config_file_from_repo_and_exit
     fi
