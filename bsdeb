@@ -250,17 +250,24 @@ configure_ssh_server()
     fi
 
     echo ".. configuring ssh"
-    if [ -f /etc/ssh/sshd_config.orig ]
-    then
-        # recover original
-        cp /etc/ssh/sshd_config.orig /etc/ssh/ssh_config
-    else
-        # save original
-        cp -n /etc/ssh/sshd_config /etc/ssh/sshd_config.orig
-    fi
-    sed -i "s/#Port 22/Port $SSH_PORT/" /etc/ssh/sshd_config
+    local config_file="/etc/ssh/sshd_config"
+    backup_or_recover_original_file $config_file
+    sed -i "s/#Port 22/Port $SSH_PORT/" $config_file
     service sshd restart
     service sshd status
+}
+
+backup_or_recover_original_file()
+{
+    local file_path=$1
+    if [ -f "${file_path}.orig" ]
+    then
+        # restore the original
+        cp "${file_path}.orig" $file_path
+    else
+        # backup the original
+        cp $file_path "${file_path}.orig"
+    fi
 }
 
 load_and_install_dotfiles()
