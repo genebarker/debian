@@ -311,9 +311,15 @@ gen_ssh_keys_and_set_auth_user()
     rm -f $KEY_HOME/id_rsa
     su $NON_ADMIN_USERNAME -c "ssh-keygen -q -t rsa -N '' -f $KEY_HOME/id_rsa"
 
-    if [ -z "$NON_ADMIN_AUTH_KEY" ]
+    if [ -z "$NON_ADMIN_AUTH_KEY_DOTFILES_PATH" ]
     then
-        return # no authorized key
+        if [ -z "$NON_ADMIN_AUTH_KEY" ]
+        then
+            return # no authorized key
+        fi
+    else
+        # use content of file in dotfiles
+        NON_ADMIN_AUTH_KEY=$(cat "${DOTFILES_REPO}/${NON_ADMIN_AUTH_KEY_DOTFILES_PATH}")
     fi
 
     echo ".. adding authorized key"
