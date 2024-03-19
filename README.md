@@ -2,7 +2,7 @@
 
 ## Instructions
 
-1. Start with a headless Debian install:
+1. Start with a headless [Debian][1] install:
     - use defaults
     - note root password
     - note non-admin username & password
@@ -40,10 +40,19 @@ application services. It uses Samba for local access to backups.
 - Sets network interface
 - Sets hostname
 - Sets groups, users, and folders for app as an add-on package using the
-  Linux Filesystem Hierarchy Standard (FHS)
-- Sets up Samba for local access to backup and restore folders
-- Sets up Easy-RSA to create local CA to use for self-signed SSL
-- Sets up Apache2 web server for HTTP, HTTPS, and HTTPS with verify client
+  Linux [Filesystem Hierarchy Standard (FHS)][2]
+- Sets up [Samba][3] for local access to backup and restore folders
+- Sets up [Easy-RSA][4] to create local CA to use for self-signed SSL
+- Sets up [Apache HTTP Server][5] for HTTP, HTTPS, and HTTPS with verify
+  client
   - `hostname/`         HTTP & HTTPS
   - `hostname/private`  HTTPS with verify client
-- Sets up PostgreSQL db server for HTTPS with verify client security
+- Sets up [PostgreSQL][6] db server for HTTPS with verify client security
+
+
+[1]: https://www.debian.org
+[2]: https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
+[3]: https://www.samba.org
+[4]: https://github.com/OpenVPN/easy-rsa
+[5]: https://httpd.apache.org
+[6]: https://www.postgresql.org
