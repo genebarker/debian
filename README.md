@@ -24,7 +24,7 @@ root@debian:~# wget -N https://github.com/genebarker/debian/raw/master/bsdeb && 
 - Eliminate repeated setup mistakes; and
 - Document their setups.
 
-## `server.conf` Minimal / Starter Setup
+## `server.conf` Minimal Starter Setup
 
 - Sets desired dotfiles
 - Sets SSH port
