@@ -277,7 +277,7 @@ load_and_install_dotfiles()
         return # no dotfile repo defined
     fi
 
-    echo ".. cloning dotfiles repo"
+    echo ".. cloning dotfiles repo for root user"
     if [ -d dotfiles ]
     then
         cd ~/dotfiles
@@ -286,9 +286,13 @@ load_and_install_dotfiles()
         cd
         git clone $DOTFILES_REPO_URL
     fi
-    echo ".. installing dotfiles"
-    cd
-    ./dotfiles/bsdots -b
+
+    if [ -n "$DOTFILES_REPO_INSTALL_SCRIPT" ]
+    then
+        echo ".. installing root user dotfiles"
+        cd
+        ./dotfiles/$DOTFILES_REPO_INSTALL_SCRIPT
+    fi
 
     if [ -z "$NON_ADMIN_USERNAME" ]
     then
@@ -302,8 +306,11 @@ load_and_install_dotfiles()
     fi
     cp -r dotfiles /home/$NON_ADMIN_USERNAME
     chown -R $NON_ADMIN_USERNAME:$NON_ADMIN_USERNAME /home/$NON_ADMIN_USERNAME/dotfiles
-    echo ".. installing non admin user dotfiles"
-    su $NON_ADMIN_USERNAME -c "/home/$NON_ADMIN_USERNAME/dotfiles/bsdots -b"
+    if [ -n "$DOTFILES_REPO_INSTALL_SCRIPT" ]
+    then
+        echo ".. installing non admin user dotfiles"
+        su - $NON_ADMIN_USERNAME -c "/home/$NON_ADMIN_USERNAME/dotfiles/$DOTFILES_REPO_INSTALL_SCRIPT"
+    fi
 }
 
 gen_ssh_keys_and_set_auth_user()
