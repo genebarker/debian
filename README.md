@@ -28,7 +28,7 @@ root@debian:~# wget -N https://github.com/genebarker/debian/raw/master/bsdeb && 
 
 - Sets desired dotfiles
 - Sets SSH port
-- Sets user and public key for SSH access
+- Sets public key for non-admin user (from Step 1) for SSH access
 
 ## `lapsj.conf` Linux / Apache / PostgreSQL / Samba / Java App Box Setup
 
