@@ -44,7 +44,7 @@ application services. It uses Samba for local access to backups.
 - Sets up [Samba][3] for local access to backup and restore folders
 - Sets up [Easy-RSA][4] to create local CA to use for self-signed SSL
 - Sets up [Apache HTTP Server][5] for HTTP, HTTPS, and HTTPS with verify
-  client
+  client security
   - `hostname/`         HTTP & HTTPS
   - `hostname/private`  HTTPS with verify client
 - Sets up [PostgreSQL][6] db server for HTTPS with verify client security
