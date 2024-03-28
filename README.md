@@ -42,12 +42,12 @@ application services. It uses Samba for local access to backups.
 - Sets groups, users, and folders for app as an add-on package using the
   Linux [Filesystem Hierarchy Standard (FHS)][2]
 - Sets up [Samba][3] for local access to backup and restore folders
-- Sets up [Jetty][4] for web app services
+- Sets up [Jetty][4] for java web app services
 - Sets up [Easy-RSA][5] to create local CA to use for self-signed SSL
 - Sets up [Apache HTTP Server][6] for HTTP, HTTPS, and HTTPS with verify
   client security
   - `hostname/`         HTTP & HTTPS
-  - `hostname/api`      HTTPS with verify client (PROXY to Jetty)
+  - `hostname/api`      HTTPS with verify client (proxy to Jetty)
   - `hostname/private`  HTTPS with verify client
 - Sets up [PostgreSQL][7] db server for HTTPS with verify client security
 
