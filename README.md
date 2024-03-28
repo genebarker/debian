@@ -42,17 +42,20 @@ application services. It uses Samba for local access to backups.
 - Sets groups, users, and folders for app as an add-on package using the
   Linux [Filesystem Hierarchy Standard (FHS)][2]
 - Sets up [Samba][3] for local access to backup and restore folders
-- Sets up [Easy-RSA][4] to create local CA to use for self-signed SSL
-- Sets up [Apache HTTP Server][5] for HTTP, HTTPS, and HTTPS with verify
+- Sets up [Jetty][4] for web app services
+- Sets up [Easy-RSA][5] to create local CA to use for self-signed SSL
+- Sets up [Apache HTTP Server][6] for HTTP, HTTPS, and HTTPS with verify
   client security
   - `hostname/`         HTTP & HTTPS
+  - `hostname/api`      HTTPS with verify client (PROXY to Jetty)
   - `hostname/private`  HTTPS with verify client
-- Sets up [PostgreSQL][6] db server for HTTPS with verify client security
+- Sets up [PostgreSQL][7] db server for HTTPS with verify client security
 
 
 [1]: https://www.debian.org
 [2]: https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
 [3]: https://www.samba.org
-[4]: https://github.com/OpenVPN/easy-rsa
-[5]: https://httpd.apache.org
-[6]: https://www.postgresql.org
+[4]: https://eclipse.dev/jetty
+[5]: https://github.com/OpenVPN/easy-rsa
+[6]: https://httpd.apache.org
+[7]: https://www.postgresql.org
