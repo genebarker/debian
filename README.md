@@ -19,7 +19,7 @@ root@debian:~# wget -N https://github.com/genebarker/debian/raw/master/bsdeb && 
 
 ## Design goals
 
-- Spin-up servers fast;
+- Spin-up app servers fast;
 - Configure them the way I like them;
 - Eliminate repeated setup mistakes; and
 - Document their setups.
@@ -29,11 +29,15 @@ root@debian:~# wget -N https://github.com/genebarker/debian/raw/master/bsdeb && 
 - Sets desired dotfiles
 - Sets SSH port
 - Sets public key for non-admin user (from Step 1) for SSH access
+- Installs VIM and sets as default
+- Installs handy remote access tools (tmux, rsync)
+- Installs windows integration tools (zip, unzip, dos2unix)
+- Installs core dev tools (git, ack, bat)
 
 ## `lapsj.conf` Linux / Apache / PostgreSQL / Samba / Java App Box Setup
 
-Extends the minimal configuration above to create environment for an app
-that provides secure self-signed access to web, database, and java
+Extends the minimal configuration above to create environment for an
+appliance that provides secure self-signed access to web, database, and java
 application services. It uses Samba for local access to backups.
 
 - Uses `lapsj.env` for private settings
