@@ -1,4 +1,4 @@
-# Bootstrap a New Debian Server
+# Bootstrap a New Debian Appliance
 
 ## Instructions
 
