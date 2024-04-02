@@ -19,7 +19,7 @@ root@debian:~# wget -N https://github.com/genebarker/debian/raw/master/bsdeb && 
 
 ## Design goals
 
-- Spin-up app servers fast;
+- Spin-up appliances fast;
 - Configure them the way I like them;
 - Eliminate repeated setup mistakes; and
 - Document their setups.
