@@ -48,6 +48,7 @@ run_main()
     upgrade_debian_image_to_latest
     install_vim_and_set_as_default
     install_remote_access_utils
+    install_diagnostic_utils
     install_windows_integration_utils
     install_core_dev_utils
     configure_ssh_server
@@ -228,6 +229,12 @@ install_remote_access_utils()
 {
     echo ".. installing remote access utilities"
     apt-get -y install tmux rsync
+}
+
+install_diagnostic_utils()
+{
+    echo ".. installing diagnostic utilities"
+    apt-get -y install htop
 }
 
 install_windows_integration_utils()
