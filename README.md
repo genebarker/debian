@@ -37,8 +37,8 @@ root@debian:~# wget -N https://github.com/genebarker/debian/raw/master/bsdeb && 
 ## `lapsj.conf` Linux / Apache / PostgreSQL / Samba / Java App Box Setup
 
 Extends the minimal configuration above to create environment for an
-appliance that provides secure self-signed access to web, database, and java
-application services. It uses Samba for local access to backups.
+appliance that provides secure self-signed [TLS][8] access to web, database,
+and java application services. It uses Samba for local access to backups.
 
 - Uses `lapsj.env` for private settings
 - Sets network interface
@@ -63,3 +63,4 @@ application services. It uses Samba for local access to backups.
 [5]: https://github.com/OpenVPN/easy-rsa
 [6]: https://httpd.apache.org
 [7]: https://www.postgresql.org
+[8]: https://en.wikipedia.org/wiki/Transport_Layer_Security
