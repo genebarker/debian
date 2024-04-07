@@ -36,7 +36,9 @@ root@debian:~# wget -N https://github.com/genebarker/debian/raw/master/bsdeb && 
 
 ## `lapsj.conf` Linux / Apache / PostgreSQL / Samba / Java App Box Setup
 
-Extends the minimal configuration above to create environment for an
+This configuration is the reason why this repo exists.
+
+It extends the minimal configuration above to create environment for an
 appliance that provides secure self-signed [TLS][8] access to web, database,
 and java application services. It uses Samba for local access to backups.
 
