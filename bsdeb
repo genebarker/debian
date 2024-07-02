@@ -46,11 +46,14 @@ run_main()
     verify_debian_version
 
     upgrade_debian_image_to_latest
+
     install_vim_and_set_as_default
     install_remote_access_utils
     install_diagnostic_utils
     install_windows_integration_utils
     install_core_dev_utils
+
+    setup_unattended_upgrades
     configure_ssh_server
     setup_networking
 
@@ -248,6 +251,21 @@ install_core_dev_utils()
 {
     echo ".. installing core development utilities"
     apt-get -y install git ack bat
+}
+
+setup_unattended_upgrades()
+{
+    if [ "${AUTO_PATCH}" != "ON" ]
+    then
+        return # nothing to configure
+    fi
+
+    echo ".. installing unattended-upgrades"
+    apt-get -y install unattended-upgrades
+
+    systemctl enable unattended-upgrades
+    systemctl start unattended-upgrades
+    sleep 2
 }
 
 configure_ssh_server()
