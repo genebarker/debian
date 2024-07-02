@@ -270,7 +270,7 @@ setup_unattended_upgrades()
 
 configure_ssh_server()
 {
-    if [ -z "$SSH_PORT" ] && [ -z "$SSH_PERMIT_ROOT_LOGIN" ]
+    if [ -z "$SSH_PORT" ] && [ -z "$SSH_PERMIT_ROOT_LOGIN" ] && [ -z "$SSH_PASSWORD_AUTH" ]
     then
         return # nothing to configure
     fi
@@ -291,6 +291,11 @@ configure_ssh_server()
         sed -i "s/^#\?PermitRootLogin.*/PermitRootLogin $SSH_PERMIT_ROOT_LOGIN/" $config_file
     fi
 
+    if [ -n "$SSH_PASSWORD_AUTH" ]
+    then
+        echo ".. setting PasswordAuthentication to ${SSH_PASSWORD_AUTH}"
+        sed -i "s/^#\?PasswordAuthentication.*/PasswordAuthentication $SSH_PASSWORD_AUTH/" $config_file
+    fi
     service sshd restart
     service sshd status
 }
