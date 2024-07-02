@@ -270,7 +270,7 @@ setup_unattended_upgrades()
 
 configure_ssh_server()
 {
-    if [ -z "$SSH_PORT" ]
+    if [ -z "$SSH_PORT" ] && [ -z "$SSH_PERMIT_ROOT_LOGIN" ]
     then
         return # nothing to configure
     fi
@@ -278,7 +278,19 @@ configure_ssh_server()
     echo ".. configuring ssh"
     local config_file="/etc/ssh/sshd_config"
     backup_or_recover_original_file $config_file
-    sed -i "s/#Port 22/Port $SSH_PORT/" $config_file
+
+    if [ -n "$SSH_PORT" ]
+    then
+        echo ".. setting SSH_PORT to ${SSH_PORT}"
+        sed -i "s/#Port 22/Port $SSH_PORT/" $config_file
+    fi
+
+    if [ -n "$SSH_PERMIT_ROOT_LOGIN" ]
+    then
+        echo ".. setting PermitRootLogin to ${SSH_PERMIT_ROOT_LOGIN}"
+        sed -i "s/^#\?PermitRootLogin.*/PermitRootLogin $SSH_PERMIT_ROOT_LOGIN/" $config_file
+    fi
+
     service sshd restart
     service sshd status
 }
