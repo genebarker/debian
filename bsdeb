@@ -52,6 +52,7 @@ run_main()
     install_windows_integration_utils
     install_core_dev_utils
     configure_ssh_server
+    setup_networking
 
     load_and_install_dotfiles
     gen_ssh_keys_and_set_auth_user
@@ -275,6 +276,84 @@ backup_or_recover_original_file()
         # backup the original
         cp $file_path "${file_path}.orig"
     fi
+}
+
+setup_networking () {
+    setup_network_interface
+    setup_hostname
+}
+
+setup_network_interface () {
+    if [ "${IFACE}" != "static" ]
+    then
+        echo ".. skipping network interface setup since done by DNS"
+        return
+    fi
+
+    local interfaces_path="/etc/network/interfaces"
+    backup_or_recover_original_file $interfaces_path
+    local resolv_path="/etc/resolv.conf"
+    backup_or_recover_original_file $resolv_path
+
+    # get line num primary network interface
+    local line_to_replace=$(grep -En '\Wdhcp$' $interfaces_path | cut -d: -f1)
+
+    # build its replacement
+    head -${line_to_replace} $interfaces_path > interfaces.temp
+    sed -i 's/dhcp/static/' interfaces.temp
+    echo " address ${IFACE_ADDRESS}" >> interfaces.temp
+    echo " netmask ${IFACE_NETMASK}" >> interfaces.temp
+    echo " gateway ${IFACE_GATEWAY}" >> interfaces.temp
+
+    # update name servers
+    if [ ! -z "${NAMESERVER_1}" ]
+    then
+        echo "nameserver ${NAMESERVER_1}" > $resolv_path
+        if [ ! -z "${NAMESERVER_2}" ]
+        then
+            echo "nameserver ${NAMESERVER_2}" >> $resolv_path
+        fi
+    fi
+
+    # change the primary interface
+    mv interfaces.temp $interfaces_path
+
+    echo ".. changed network interfaces"
+    cat $interfaces_path
+
+    echo ".. restarting network"
+    systemctl restart networking
+    sleep 2
+}
+
+setup_hostname () {
+    if [ -z "$HOSTNAME" ]
+    then
+        return # nothing to configure
+    fi
+    echo ".. setting hostname with system"
+    hostnamectl set-hostname $HOSTNAME
+
+    echo ".. updating hosts file"
+    local hosts_path="/etc/hosts"
+    local ip_address="${IFACE_ADDRESS}"
+    if [ -z "${ip_address}" ]
+    then
+        ip_address=$(get_ip_address)
+    fi
+
+    backup_or_recover_original_file $hosts_path
+    echo "127.0.0.1 localhost" > $hosts_path
+    echo "${ip_address} ${FQDN} ${HOSTNAME}" >> $hosts_path
+    cat $hosts_path
+
+    echo ".. hostname changed"
+    hostnamectl
+}
+
+get_ip_address () {
+    local iface_name=$(ip route get 1.1.1.1 | grep -o "dev [^ ]*" | awk '{print $2}')
+    ip -4 addr show $iface_name | grep -oP '(?<=inet\s)\d+(\.\d+){3}'
 }
 
 load_and_install_dotfiles()
