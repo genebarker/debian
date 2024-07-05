@@ -44,9 +44,9 @@ every appliance should have:
 
 ## `lapsj.conf` Linux / Apache / PostgreSQL / Samba / Java App Box Setup
 
-This extends the minimal configuration above to create environment for an
-appliance that provides secure self-signed [TLS][8] access to web, database,
-and java application services. It uses Samba for local access to backups.
+This extends the base configuration above to create an appliance that
+provides secure self-signed [TLS][8] access to web, database, and java
+application services. It uses Samba for local access to backups.
 
 - Uses `lapsj.env` for private settings
 - Sets network interface
