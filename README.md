@@ -13,9 +13,12 @@
 root@debian:~# wget -N https://github.com/genebarker/debian/raw/master/bsdeb && chmod 755 bsdeb
 ```
 4. Retrieve your desired `server.conf` file to the same
-   (or run the script to retrieve a bare-bones example config).
+   (or run the script to retrieve base starter config).
 5. Update `server.conf` with desired settings.
 6. Run `bsdeb` script.
+
+Note: For VPS's like linode, use caution when disabling root access to
+SSH. Make sure you setup a non-admin user to avoid locking yourself out.
 
 ## Design goals
 
@@ -24,11 +27,16 @@ root@debian:~# wget -N https://github.com/genebarker/debian/raw/master/bsdeb && 
 - Eliminate repeated setup mistakes; and
 - Document their setups.
 
-## `server.conf` Minimal Starter Setup
+## `server.conf` Base Starter Setup
+
+Start here. This is the base configuration that sets up the basics that
+every appliance should have:
 
 - Sets desired dotfiles
-- Sets SSH port
 - Sets public key for non-admin user (from Step 1) for SSH access
+- Sets up SSH and locks it down
+- Sets up unattended upgrades
+- Sets up networking
 - Installs VIM and sets as default
 - Installs handy remote access tools (tmux, rsync)
 - Installs windows integration tools (zip, unzip, dos2unix)
@@ -36,9 +44,7 @@ root@debian:~# wget -N https://github.com/genebarker/debian/raw/master/bsdeb && 
 
 ## `lapsj.conf` Linux / Apache / PostgreSQL / Samba / Java App Box Setup
 
-This configuration is the reason why this repo exists.
-
-It extends the minimal configuration above to create environment for an
+This extends the minimal configuration above to create environment for an
 appliance that provides secure self-signed [TLS][8] access to web, database,
 and java application services. It uses Samba for local access to backups.
 
