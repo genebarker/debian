@@ -42,6 +42,13 @@ every appliance should have:
 - Installs windows integration tools (zip, unzip, dos2unix)
 - Installs core dev tools (git, ack, bat)
 
+## `resilio.conf` Resilio Sync Setup
+
+This extends the base configuration above to create a Resilio Sync
+appliance. Note that you must SSH tunnel in to 127.0.0.1:8888 to configure
+the Resilio service using its web interface. This script is based on the
+[Install Resilio Sync][9] post by LinuxBabe. 
+
 ## `lapsj.conf` Linux / Apache / PostgreSQL / Samba / Java App Box Setup
 
 This extends the base configuration above to create an appliance that
@@ -72,3 +79,4 @@ application services. It uses Samba for local access to backups.
 [6]: https://httpd.apache.org
 [7]: https://www.postgresql.org
 [8]: https://en.wikipedia.org/wiki/Transport_Layer_Security
+[9]: https://www.linuxbabe.com/ubuntu/install-resilio-sync-btsync-ubuntu
