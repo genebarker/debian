@@ -46,8 +46,8 @@ every appliance should have:
 
 This extends the base configuration above to create a Resilio Sync
 appliance. Note that you must SSH tunnel in to 127.0.0.1:8888 to configure
-the Resilio service using its web interface. This script is based on the
-post [Install Resilio Sync][9] by LinuxBabe. 
+the Resilio service using its web interface. This setup is based on the post
+[Install Resilio Sync][9] by LinuxBabe. 
 
 ## `lapsj.conf` Linux / Apache / PostgreSQL / Samba / Java App Box Setup
 
