@@ -250,7 +250,22 @@ install_windows_integration_utils()
 install_core_dev_utils()
 {
     echo ".. installing core development utilities"
-    apt-get -y install git ack bat
+    apt-get -y install git ack bat tldr
+
+    echo ".. configure tldr"
+    local root_tldr_dir="/root/.local/share/tldr"
+    mkdir -p $root_tldr_dir
+    tldr --update
+
+    echo ".. copying tldr data for non admin user ($NON_ADMIN_USERNAME)"
+    local reg_tldr_dir="/home/$NON_ADMIN_USERNAME/.local/share/tldr"
+    if [ -d $reg_tldr_dir ]
+    then
+        rm -rf $reg_tldr_dir
+    fi
+    su -c "mkdir -p $reg_tldr_dir" $NON_ADMIN_USERNAME
+    cp -r $root_tldr_dir/* $reg_tldr_dir
+    chown -R $NON_ADMIN_USERNAME:$NON_ADMIN_USERNAME $reg_tldr_dir
 }
 
 setup_unattended_upgrades()
