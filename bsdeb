@@ -238,7 +238,7 @@ install_remote_access_utils()
 install_diagnostic_utils()
 {
     echo ".. installing diagnostic utilities"
-    apt-get -y install htop
+    apt-get -y install htop ncdu
 }
 
 install_windows_integration_utils()
