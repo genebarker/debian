@@ -52,6 +52,7 @@ run_main()
     install_diagnostic_utils
     install_windows_integration_utils
     install_core_dev_utils
+    install_help_utils
 
     setup_unattended_upgrades
     configure_ssh_server
@@ -250,7 +251,13 @@ install_windows_integration_utils()
 install_core_dev_utils()
 {
     echo ".. installing core development utilities"
-    apt-get -y install git ack bat tldr
+    apt-get -y install git ack bat
+}
+
+install_help_utils()
+{
+    echo ".. installing help utilities"
+    apt-get -y install tldr ddgr w3m
 
     echo ".. configure tldr"
     local root_tldr_dir="/root/.local/share/tldr"
@@ -266,6 +273,11 @@ install_core_dev_utils()
     su -c "mkdir -p $reg_tldr_dir" $NON_ADMIN_USERNAME
     cp -r $root_tldr_dir/* $reg_tldr_dir
     chown -R $NON_ADMIN_USERNAME:$NON_ADMIN_USERNAME $reg_tldr_dir
+
+    echo ".. set default browser to w3m"
+    local env_file="/etc/environment"
+    backup_or_recover_original_file $env_file
+    echo "export BROWSER=w3m" > $env_file
 }
 
 setup_unattended_upgrades()
