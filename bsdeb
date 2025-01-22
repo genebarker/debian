@@ -48,6 +48,8 @@ run_main()
     verify_and_load_config_file
     verify_debian_version
 
+    ensure_non_interactive_installs
+
     upgrade_debian_image_to_latest
 
     install_vim_and_set_as_default
@@ -218,6 +220,11 @@ EOF
         ask_continue_question "$question"
         echo
     fi
+}
+
+ensure_non_interactive_installs()
+{
+    export DEBIAN_FRONTEND=noninteractive
 }
 
 upgrade_debian_image_to_latest()
