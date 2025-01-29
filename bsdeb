@@ -292,19 +292,57 @@ install_help_utils()
     echo "export BROWSER=w3m" > $env_file
 }
 
-setup_unattended_upgrades()
-{
-    if [ "${AUTO_PATCH}" != "ON" ]
-    then
-        return # nothing to configure
+setup_unattended_upgrades() {
+    if [ "${AUTO_PATCH}" != "ON" ]; then
+        echo ".. AUTO_PATCH not enabled, skipping unattended-upgrades setup"
+        return
     fi
 
-    echo ".. installing unattended-upgrades"
-    apt-get -y install unattended-upgrades
+    echo ".. installing unattended-upgrades and apt-listchanges"
+    apt-get -y install unattended-upgrades apt-listchanges
 
+    echo ".. configuring apt's periodic tasks"
+    local frequency_config="/etc/apt/apt.conf.d/20auto-upgrades"
+    backup_or_recover_original_file $frequency_config
+    cat <<EOF > $frequency_config
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Download-Upgradeable-Packages "1";
+APT::Periodic::Unattended-Upgrade "1";
+APT::Periodic::AutocleanInterval "7";
+EOF
+
+    echo ".. configuring unattended-upgrades..."
+    local unattended_config="/etc/apt/apt.conf.d/50unattended-upgrades"
+    backup_or_recover_original_file $unattended_config
+    cat <<EOF > $unattended_config
+Unattended-Upgrade::Origins-Pattern {
+        "origin=Debian,codename=\${distro_codename},label=Debian";
+        "origin=Debian,codename=\${distro_codename}-security,label=Debian-Security";
+        "origin=Debian,codename=\${distro_codename}-updates,label=Debian";
+};
+
+Unattended-Upgrade::Automatic-Reboot "true";
+EOF
+
+    echo ".. configuring apt-listchanges for rich changelogs and no prompts"
+    local listchanges_config=/etc/apt/listchanges.conf
+    backup_or_recover_original_file $listchanges_config
+    cat <<EOF > $listchanges_config
+[apt]
+frontend=text       # Log changes instead of displaying interactively
+email_address=      # No email notifications by default
+confirm=0           # Do not prompt for confirmation
+EOF
+
+    echo ".. enabling and starting unattended-upgrades service"
     systemctl enable unattended-upgrades
     systemctl start unattended-upgrades
-    sleep 2
+
+    echo ".. testing unattended-upgrades with a dry run"
+    unattended-upgrade --dry-run || \
+        echo ".. dry run completed with non-zero exit code (see above)."
+
+    echo ".. unattended-upgrades setup complete"
 }
 
 configure_ssh_server()
