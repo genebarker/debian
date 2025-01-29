@@ -343,6 +343,39 @@ EOF
         echo ".. dry run completed with non-zero exit code (see above)."
 
     echo ".. unattended-upgrades setup complete"
+    echo ".. (use override_unattended_upgrades_times function to customize)"
+}
+
+override_unattended_upgrades_times() {
+    if [ -z "$1" ] || [ -z "$2" ]; then
+        echo "ERROR: Upgrade time and reboot time must be provided."
+        echo "Usage: override_unattended_upgrades_times <upgrade_time> <reboot_time>"
+        echo "       (use military time values '21.05' '21.35')"
+        return 1
+    fi
+
+    local upgrade_time="$1"
+    local reboot_time="$2"
+
+    echo ".. overriding unattended-upgrades timer to run at $upgrade_time"
+    local timer_override="/etc/systemd/system/apt-daily-upgrade.timer.d/override.conf"
+    mkdir -p /etc/systemd/system/apt-daily-upgrade.timer.d
+    cat <<EOF > $timer_override
+[Timer]
+OnCalendar=$upgrade_time
+RandomizedDelaySec=0
+EOF
+
+    echo ".. overriding unattended-upgrades reboot time to $reboot_time"
+    local unattended_config="/etc/apt/apt.conf.d/50unattended-upgrades"
+    echo "Unattended-Upgrade::Automatic-Reboot-Time \"$reboot_time\";" >> $unattended_config
+
+    echo ".. applying new unattended-upgrades schedule"
+    systemctl daemon-reload
+    systemctl restart apt-daily-upgrade.timer
+
+    echo ".. unattended-upgrades now scheduled to run at $upgrade_time"
+    echo ".. reboots will occur at $reboot_time if needed"
 }
 
 configure_ssh_server()
