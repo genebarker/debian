@@ -338,17 +338,21 @@ configure_ssh_server()
     service sshd restart
     service sshd status
 }
+backup_or_recover_original_file() {
+    local file_path="$1"
+    if [ -z "$file_path" ]; then
+        echo "ERROR: No file path provided."
+        return 1
+    fi
 
-backup_or_recover_original_file()
-{
-    local file_path=$1
-    if [ -f "${file_path}.orig" ]
-    then
-        # restore the original
-        cp "${file_path}.orig" $file_path
+    if [ -f "${file_path}.orig" ]; then
+        echo ".. restoring original file: ${file_path}.orig -> $file_path"
+        cp "${file_path}.orig" "$file_path"
+    elif [ -f "$file_path" ]; then
+        echo ".. backing up original file: $file_path -> ${file_path}.orig"
+        cp "$file_path" "${file_path}.orig"
     else
-        # backup the original
-        cp $file_path "${file_path}.orig"
+        echo "WARNING: $file_path does not exist. No action taken."
     fi
 }
 
