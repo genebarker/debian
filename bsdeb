@@ -263,7 +263,7 @@ install_windows_integration_utils()
 install_core_dev_utils()
 {
     echo ".. installing core development utilities"
-    apt-get -y install git ack bat
+    apt-get -y install git ack sqlite3 bat
 }
 
 install_help_utils()

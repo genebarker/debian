@@ -41,7 +41,7 @@ every appliance should have:
 - Installs handy remote access tools (tmux, rsync)
 - Installs handy diagnostic tools (tree, htop, ncdu)
 - Installs windows integration tools (zip, unzip, dos2unix)
-- Installs core dev tools (git, ack, bat)
+- Installs core dev tools (git, ack, sqlite, bat)
 - Installs handy help tools (tldr, ddgr)
 
 ## `resilio.conf` Resilio Sync Setup
