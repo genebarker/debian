@@ -331,7 +331,7 @@ EOF
 [apt]
 frontend=text       # Log changes instead of displaying interactively
 email_address=      # No email notifications by default
-confirm=0           # Do not prompt for confirmation
+confirm=false       # Do not prompt for confirmation
 EOF
 
     echo ".. enabling and starting unattended-upgrades service"
