@@ -7,8 +7,8 @@
 set -e
 
 PROGRAM_NAME="Debian Bootstrapper"
-PROGRAM_VERSION="1.0.8-SNAPSHOT"
-DEBIAN_VERSION=12.11
+PROGRAM_VERSION="1.0.9-SNAPSHOT"
+DEBIAN_VERSION=13.1
 REPO_SOURCE_URL="https://github.com/genebarker/debian/raw/master"
 SCRIPT_FILENAME="$(basename ${BASH_SOURCE})"
 BASE_DIR="$(dirname ${BASH_SOURCE})"
@@ -269,15 +269,15 @@ install_core_dev_utils()
 install_help_utils()
 {
     echo ".. installing help utilities"
-    apt-get -y install tldr ddgr w3m
+    apt-get -y install tealdeer ddgr w3m
 
     echo ".. configure tldr"
-    local root_tldr_dir="/root/.local/share/tldr"
+    local root_tldr_dir="/root/.cache/tealdeer/tldr-pages"
     mkdir -p $root_tldr_dir
     tldr --update
 
     echo ".. copying tldr data for non admin user ($NON_ADMIN_USERNAME)"
-    local reg_tldr_dir="/home/$NON_ADMIN_USERNAME/.local/share/tldr"
+    local reg_tldr_dir="/home/$NON_ADMIN_USERNAME/.cache/tealdeer/tldr-pages"
     if [ -d $reg_tldr_dir ]
     then
         rm -rf $reg_tldr_dir
