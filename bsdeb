@@ -251,7 +251,7 @@ install_remote_access_utils()
 install_diagnostic_utils()
 {
     echo ".. installing diagnostic utilities"
-    apt-get -y install tree htop ncdu
+    apt-get -y install fastfetch tree htop ncdu
 }
 
 install_windows_integration_utils()
