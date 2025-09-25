@@ -39,7 +39,7 @@ every appliance should have:
 - Sets up networking
 - Installs VIM and sets as default
 - Installs handy remote access tools (tmux, rsync)
-- Installs handy diagnostic tools (tree, htop, ncdu)
+- Installs handy diagnostic tools (fastfetch, tree, htop, ncdu)
 - Installs windows integration tools (zip, unzip, dos2unix)
 - Installs core dev tools (git, ack, sqlite, bat)
 - Installs handy help tools (tldr, ddgr)
