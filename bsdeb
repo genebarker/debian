@@ -8,7 +8,7 @@ set -e
 
 PROGRAM_NAME="Debian Bootstrapper"
 PROGRAM_VERSION="1.1.0-SNAPSHOT"
-DEBIAN_VERSION=13.1
+DEBIAN_VERSION=13.5
 REPO_SOURCE_URL="https://github.com/genebarker/debian/raw/master"
 SCRIPT_FILENAME="$(basename ${BASH_SOURCE})"
 BASE_DIR="$(dirname ${BASH_SOURCE})"
