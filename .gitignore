@@ -3,3 +3,6 @@ private/
 
 # macOS
 .DS_Store
+
+# agent working files
+.antigravitycli
