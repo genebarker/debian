@@ -1,0 +1,5 @@
+# Private server configs - never commit
+private/
+
+# macOS
+.DS_Store
