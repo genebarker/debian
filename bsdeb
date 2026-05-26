@@ -434,16 +434,21 @@ setup_networking() {
 }
 
 setup_network_interface() {
+    local interfaces_path="/etc/network/interfaces"
+    local dhcpcd_path="/etc/dhcpcd.conf"
+    local resolv_path="/etc/resolv.conf"
+
+    backup_or_recover_original_file $interfaces_path
+    backup_or_recover_original_file $dhcpcd_path
+    backup_or_recover_original_file $resolv_path
+
     if [ "${IFACE}" != "static" ]
     then
-        echo ".. skipping network interface setup since done by DNS"
+        echo ".. restoring original DHCP network setup"
+        systemctl restart networking
+        sleep 2
         return
     fi
-
-    local interfaces_path="/etc/network/interfaces"
-    backup_or_recover_original_file $interfaces_path
-    local resolv_path="/etc/resolv.conf"
-    backup_or_recover_original_file $resolv_path
 
     # get line num primary network interface
     local line_to_replace=$(grep -En '\Wdhcp$' $interfaces_path | cut -d: -f1)
@@ -455,16 +460,6 @@ setup_network_interface() {
     echo " netmask ${IFACE_NETMASK}" >> interfaces.temp
     echo " gateway ${IFACE_GATEWAY}" >> interfaces.temp
 
-    # update name servers
-    if [ ! -z "${NAMESERVER_1}" ]
-    then
-        echo "nameserver ${NAMESERVER_1}" > $resolv_path
-        if [ ! -z "${NAMESERVER_2}" ]
-        then
-            echo "nameserver ${NAMESERVER_2}" >> $resolv_path
-        fi
-    fi
-
     # change the primary interface
     mv interfaces.temp $interfaces_path
 
@@ -474,6 +469,28 @@ setup_network_interface() {
     echo ".. restarting network"
     systemctl restart networking
     sleep 2
+
+    # NOTE: On Debian Trixie, dhcpcd runs as an ifupdown hook
+    # (not a service), so 'nohook resolv.conf' in dhcpcd.conf
+    # has no effect. dhcpcd wipes resolv.conf on every network
+    # restart and reboot. resolv.conf.head is the only mechanism
+    # dhcpcd always respects regardless of invocation method.
+    # dhcpcd --reconfigure forces immediate resolv.conf regen.
+    # If Debian changes its networking stack, revisit this.
+    echo ".. setting DNS after restart so hooks can't overwrite"
+    local resolv_head_path="/etc/resolv.conf.head"
+    if [ ! -z "${NAMESERVER_1}" ]
+    then
+        echo "nameserver ${NAMESERVER_1}" > $resolv_head_path
+        if [ ! -z "${NAMESERVER_2}" ]
+        then
+            echo "nameserver ${NAMESERVER_2}" >> $resolv_head_path
+        fi
+    else
+        rm -f $resolv_head_path
+    fi
+    dhcpcd --reconfigure
+    cat $resolv_path
 }
 
 setup_hostname() {
