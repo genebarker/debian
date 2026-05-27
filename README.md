@@ -1,5 +1,7 @@
 # Bootstrap a New Debian Appliance
 
+> Updated for Debian 13 (Trixie)
+
 ## Instructions
 
 1. Start with a headless [Debian][1] install:
