@@ -436,10 +436,8 @@ setup_networking() {
 
 setup_network_interface() {
     local interfaces_path="/etc/network/interfaces"
-    local dhcpcd_path="/etc/dhcpcd.conf"
 
     backup_or_recover_original_file $interfaces_path
-    backup_or_recover_original_file $dhcpcd_path
 
     if [ "${IFACE}" != "static" ]
     then
