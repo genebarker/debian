@@ -7,7 +7,7 @@
 set -e
 
 PROGRAM_NAME="Debian Bootstrapper"
-PROGRAM_VERSION="1.1.0"
+PROGRAM_VERSION="1.1.1-SNAPSHOT"
 DEBIAN_VERSION=13.5
 REPO_SOURCE_URL="https://github.com/genebarker/debian/raw/master"
 SCRIPT_FILENAME="$(basename ${BASH_SOURCE})"
@@ -430,17 +430,16 @@ configure_ssh_server()
 
 setup_networking() {
     setup_network_interface
+    setup_dns
     setup_hostname
 }
 
 setup_network_interface() {
     local interfaces_path="/etc/network/interfaces"
     local dhcpcd_path="/etc/dhcpcd.conf"
-    local resolv_path="/etc/resolv.conf"
 
     backup_or_recover_original_file $interfaces_path
     backup_or_recover_original_file $dhcpcd_path
-    backup_or_recover_original_file $resolv_path
 
     if [ "${IFACE}" != "static" ]
     then
@@ -469,6 +468,11 @@ setup_network_interface() {
     echo ".. restarting network"
     systemctl restart networking
     sleep 2
+}
+
+setup_dns() {
+    local resolv_head_path="/etc/resolv.conf.head"
+    local resolv_path="/etc/resolv.conf"
 
     # NOTE: On Debian Trixie, dhcpcd runs as an ifupdown hook
     # (not a service), so 'nohook resolv.conf' in dhcpcd.conf
@@ -477,8 +481,7 @@ setup_network_interface() {
     # dhcpcd always respects regardless of invocation method.
     # dhcpcd --reconfigure forces immediate resolv.conf regen.
     # If Debian changes its networking stack, revisit this.
-    echo ".. setting DNS after restart so hooks can't overwrite"
-    local resolv_head_path="/etc/resolv.conf.head"
+    echo ".. setting DNS nameservers"
     if [ ! -z "${NAMESERVER_1}" ]
     then
         echo "nameserver ${NAMESERVER_1}" > $resolv_head_path
