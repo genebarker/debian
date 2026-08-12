@@ -7,7 +7,7 @@
 set -e
 
 PROGRAM_NAME="Debian Bootstrapper"
-PROGRAM_VERSION="1.1.1"
+PROGRAM_VERSION="1.1.2"
 DEBIAN_VERSION=13.5
 REPO_SOURCE_URL="https://github.com/genebarker/debian/raw/master"
 SCRIPT_FILENAME="$(basename ${BASH_SOURCE})"
@@ -380,6 +380,9 @@ override_unattended_upgrades_times() {
     mkdir -p /etc/systemd/system/apt-daily-upgrade.timer.d
     cat <<EOF > $timer_override
 [Timer]
+# empty value clears Debian's stock 06:00 entry - without it systemd
+# merges the lists and the timer fires at both times
+OnCalendar=
 OnCalendar=$upgrade_time
 RandomizedDelaySec=0
 EOF
