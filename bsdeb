@@ -7,7 +7,7 @@
 set -e
 
 PROGRAM_NAME="Debian Bootstrapper"
-PROGRAM_VERSION="1.1.2"
+PROGRAM_VERSION="1.2.0"
 DEBIAN_VERSION=13.5
 REPO_SOURCE_URL="https://github.com/genebarker/debian/raw/master"
 SCRIPT_FILENAME="$(basename ${BASH_SOURCE})"
@@ -435,6 +435,7 @@ setup_networking() {
     setup_network_interface
     setup_dns
     setup_hostname
+    setup_tailscale
 }
 
 setup_network_interface() {
@@ -525,6 +526,35 @@ setup_hostname() {
 get_ip_address() {
     local iface_name=$(ip route get 1.1.1.1 | grep -o "dev [^ ]*" | awk '{print $2}')
     ip -4 addr show $iface_name | grep -oP '(?<=inet\s)\d+(\.\d+){3}'
+}
+
+setup_tailscale() {
+    if [ "${TAILSCALE}" != "ON" ]
+    then
+        echo ".. TAILSCALE not enabled, skipping tailscale setup"
+        return
+    fi
+
+    echo ".. adding tailscale apt repo"
+    local repo_url="https://pkgs.tailscale.com/stable/debian"
+    local codename=$(. /etc/os-release && echo $VERSION_CODENAME)
+    curl -fsSL "$repo_url/$codename.noarmor.gpg" \
+        > /usr/share/keyrings/tailscale-archive-keyring.gpg
+    curl -fsSL "$repo_url/$codename.tailscale-keyring.list" \
+        > /etc/apt/sources.list.d/tailscale.list
+
+    echo ".. installing tailscale"
+    apt-get update
+    apt-get -y install tailscale
+
+    if tailscale status >/dev/null 2>&1
+    then
+        echo ".. already joined to tailnet (replay)"
+        tailscale ip -4
+    else
+        echo "!! ACTION REQUIRED: join this box to the tailnet using:"
+        echo "!! tailscale up --hostname=$HOSTNAME"
+    fi
 }
 
 load_and_install_dotfiles()
