@@ -18,6 +18,10 @@ root@debian:~# wget -N https://github.com/genebarker/debian/raw/master/bsdeb && 
    (or run the script to retrieve base starter config).
 5. Update `server.conf` with desired settings.
 6. Run `bsdeb` script.
+7. If `TAILSCALE="ON"`, join the box to your tailnet:
+```console
+root@debian:~# tailscale up --hostname=<hostname>
+```
 
 Note: For VPS's like linode, use caution when disabling root access to
 SSH. Make sure you setup a non-admin user to avoid locking yourself out.
@@ -39,11 +43,12 @@ every appliance should have:
 - Sets up SSH and locks it down
 - Sets up unattended upgrades
 - Sets up networking
+- Installs [Tailscale][10] for remote access (default `TAILSCALE="OFF"`)
 - Installs VIM and sets as default
 - Installs handy remote access tools (tmux, rsync)
-- Installs handy diagnostic tools (fastfetch, tree, htop, ncdu)
+- Installs handy diagnostic tools (fastfetch, tree, htop, ncdu, fd-find)
 - Installs windows integration tools (zip, unzip, dos2unix)
-- Installs core dev tools (git, ack, sqlite, bat)
+- Installs core dev tools (git, ack, sqlite, bat, shellcheck)
 - Installs handy help tools (tldr, ddgr)
 
 ## `resilio.conf` Resilio Sync Setup
@@ -84,3 +89,4 @@ application services. It uses Samba for local access to backups.
 [7]: https://www.postgresql.org
 [8]: https://en.wikipedia.org/wiki/Transport_Layer_Security
 [9]: https://www.linuxbabe.com/ubuntu/install-resilio-sync-btsync-ubuntu
+[10]: https://tailscale.com
